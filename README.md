@@ -1,7 +1,9 @@
 # NG Pre-Requisites: Dockers
 This file has been created by **Sajal Saxena**, a Software Engineering Intern at Vunet Systems.
 
-This file consists of a markdown file and some images used in that markdown file, as part of the assignment for NG Pre-Requisites: Dockers course.
+**Docker_Assignment_Folder** contains all the files that are necessary for the submission of this assignment, **including the markdown file**.
+
+This folder consists of a markdown file and some images used in that markdown file, as part of the assignment for NG Pre-Requisites: Dockers course.
 The name of the markdown file is **sajal_docker_assignment.md**. The file contains two assignments: 
 - Assignment-1
 - Assignment 2
