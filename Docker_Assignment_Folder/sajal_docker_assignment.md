@@ -2,30 +2,30 @@
 
 ## Assignment-1
 Create a `Dockerfile` that : 
-a. Uses the latest `ubuntu` image
-b. Install `python3.10`
-c. Copy the below python script into the image.
+1. Uses the latest `ubuntu` image
+2. Install `python3.10`
+3. Copy the below python script into the image.
 ```python
 import http.server
 import socketserver
 from http import HTTPStatus
 class Handler(http.server.SimpleHTTPRequestHandler):
-def do_GET(self):
-self.send_response(HTTPStatus.OK)
-self.end_headers()
-self.wfile.write(b'Hello world')
+    def do_GET(self):
+        self.send_response(HTTPStatus.OK)
+        self.end_headers()
+        self.wfile.write(b'Hello world')
 httpd = socketserver.TCPServer(('', 8000), Handler)
 print("Serving Http Requests on 8000...)
 httpd.serve_forever()
 ```
-d. Run the python file as the entrypoint
+4. Run the python file as the entrypoint
 
-#### Solution
-Copying the code into a python file:
+### Solution
+Step 1: Copy the code into a python file and save the file as _assignment-1.py_.
 
-Step: Creating the following dockerfile using nano editor, and naming it _Dockerfile-Assignment-1_:
+Step 2: Create the following dockerfile using nano editor, and name it _Dockerfile-Assignment-1_:
 
-```
+```Dockerfile
 FROM ubuntu:latest
 
 WORKDIR /src
@@ -44,9 +44,11 @@ EXPOSE 8000
 
 ENTRYPOINT ["python3.10", "assignment-1.py"]
 ```
-![alt text](image-3.png)
+The snapshot of the same is attached below:
 
-#### Breakdown
+![Dockerfile in Nano Editor](image-3.png)
+
+### Breakdown
 - **FROM ubuntu:latest** --> This line ensures that the latest official ubuntu image is being used.
 - **WORKDIR /src** --> This ensures that the directory within the container is set to /src. The COPY and RUN commands will be relative to this directory.
 - **apt-get update** --> Updates the list of available pakcages and versions in the Ubuntu repository.
@@ -59,16 +61,20 @@ ENTRYPOINT ["python3.10", "assignment-1.py"]
 - **EXPOSE 8000** --> This line ensures that the container will listen on port 8000. 8000 is defined because the given python code starts an HTTP server that listens to port 8000.
 - **ENTRYPOINT ["python3.10", "assignment-1.py"]** --> This line sets the entrypoint of the container to the python file that has been named `assignment-1.py`, and it runs using python version 3.10.
 
-Step: Creating the following python file using the nano editor, naming it as assignment-1.py. This file is created inside the _hello-world-python_ directory that was used during _Install Docker_ module of vulearn platform.
+>Note: Ubuntu does not contain python3.10 in its default repositories, hence it was necessary to installtools required to add a new software peopsitory and the third party PPA.
 
-![alt text](image.png)
+Step 3: Create the following python file using the nano editor, name it as assignment-1.py. This file is created inside the _hello-world-python_ directory that was used during _Install Docker_ module of vulearn platform.
 
-#### Output
+![assignment-1.py in Nano Editor](image.png)
+
+### Output
 `Hello world` will be displayed when localhost:8000 is opened on the browser, as shown in the below snapshot.
-![alt text](image-4.png)
+![Assignment-1 outputon localhost:8000](image-4.png)
 
-Step: Running docker using the following command:
-    `docker run -d -p 8000:8000 sajal012/sajal_docker:assignment_1`
+Step 4: Running docker using the following command:
+```bash 
+   docker run -d -p 8000:8000 sajal012/sajal_docker:assignment_1
+```
 
 This will run the image:
 - created by profile `sajal012`
@@ -77,10 +83,13 @@ This will run the image:
 - in `detached` mode
 - mapping host machine's port `8000` to port `8000` of the docker container
 
-Step: Checking whether the image is running by using the following command:
-    `docker ps`. It will show various details like the container ID, image name and status. This is shown in the snapshot below:
+Step 5: Checking whether the image is running by using the following command:
+```bash
+docker ps
+``` 
+It will show various details like the container ID, image name and status. This is shown in the snapshot below:
 
-![alt text](image-5.png)
+![Running containers](image-5.png)
 
 ## Assignment-2
 
@@ -98,7 +107,7 @@ docker image ls
 ```
 
 This is demonstrated in the snapshot attached below:
-![alt text](image-14.png)
+![List of Images in the system](image-14.png)
 
 Note: the command `docker images` also produces the same result.
 
@@ -107,11 +116,11 @@ To list all the containers in the system, the following command is used:
 docker ps -a
 ```
 
-This will display the containers which are running as well as the ones which have been stopped.This is demonstratd in the snapshot attached below:
-![alt text](image-15.png)
+This will display the containers which are running as well as the ones which have been stopped. This is demonstrated in the snapshot attached below:
+![List of all containers in the system](image-15.png)
 
-Note: to view only the containers that are running, the command `docker ps` is used. The attached snapshot ddemonstrates it:
-![alt text](image-16.png)
+Note: to view only the containers that are running, the command `docker ps` is used. The attached snapshot demonstrates it:
+![List of currently running containers](image-16.png)
 
 ### 3. Pull the latest image of `nginx` and run it:
     a. By naming the container `super-nginx`
@@ -119,7 +128,7 @@ Note: to view only the containers that are running, the command `docker ps` is u
     c. In the detached mode
     d. With the environment variable `NGINX_HOST` set to `vunet.local`
 
-Solution:
+### Solution:
 
 To pull the latest image of nginx, the following command is used:  
 ```bash
@@ -127,7 +136,7 @@ docker run -d -p 7001 -e NGINX_HOST=vunet.local --name super-nginx nginx:latest
 ```  
 
 This is demonstarted in the snapshot given below:
-![alt text](image-7.png)
+![Latest Nginx Image Pulled](image-7.png)
 
 Breakdown:
 - -**d** runs the command in detached mode
@@ -137,84 +146,187 @@ Breakdown:
 
 ###  4. Get the list of all running containers and stop and remove the `nginx` container
 
-#### Solution:
+### Solution:
 To obtain a list of all the running containers, the following command is used:  
 ```bash
 docker ps
 ```
-
 It gives the list, as shown in the snapshot below:  
 
-![alt text](image-8.png)
+![Currently running containers](image-8.png)
 
 To stop the `nginx` container, first, the CONTAINER ID of super-nginx is obtained from the list of all running containers. The ID is `0f0c8befbf41`.  
 
 Next, the following command is used:  
-`docker stop 0f0c8befbf41`
+```bash
+docker stop 0f0c8befbf41
+```
 
 To confirm, the list of all running containers is again displayed. super-nginx container is **not** in the list, thereby confirming that it has been stopped. This has been demonstrated in the snapshot below:
 
-![alt text](image-9.png)
+![List of containers, nginx is absent](image-9.png)
 
 ### 5. Create a docker volume named `vunet` and run `nginx` again, but this time, attach the volume created to the `/etc/` in the container
 
-#### Solution:
+### Solution:
 - The volume is created using the command:  
-`docker volume create vunet`
+```bash
+docker volume create vunet
+```
 
 - The volume is run using the command:  
-`docker run --name nginx-volume -v vunet:/etc/ -d nginx`
+```bash
+docker run --name nginx-volume -v vunet:/etc/ -d nginx
+```
 
-    This will run the volume that has following:
-    - Name: **vunet**
-    - A container inside it named **nginx-volume**
-    - Attached to /etc/ using -v
-    - The latest image of **nginx**
-- Listed down all the volumes using the command:  
-`docker volume ls`  
-- More information about the volume vunet using the command:  
-`docker inspect vunet`  
+This will run the volume that has following:
+- Name: **vunet**
+- A container inside it named **nginx-volume**
+- Attached to /etc/ using -v
+- The latest image of **nginx**
+
+Listed down all the volumes using the command:  
+```bash
+docker volume ls
+```  
+More information about the volume vunet using the command:  
+```bash
+docker inspect vunet
+```  
 
 These have been demonstrated in the snapshot attached below:
-![alt text](image-10.png)
+![Docker Volume creation and inspection](image-10.png)
 
 ### 6. Stop and remove the `nginx` container and remove the volume `vunet`
 
-#### Solution:
+### Solution:
 
-- Stopping nginx container named nginx-volume using the command:  
-`docker stop nginx-volume`
-- Removing the nginx container using the command:  
-`docker rm nginx-volume`
-- Removing the volume name vunet using the command:  
-`docker volume rm vunet`
-- Confirming the removal of volume vunet by listing down all the volumes, and noticing that `vunet` is missing, using the command:  
-`docker volume ls`
+Stopping nginx container named nginx-volume using the command:  
+```bash
+docker stop nginx-volume
+```
+Removing the nginx container using the command:  
+```bash
+docker rm nginx-volume
+```
+Removing the volume name vunet using the command:  
+```bash
+docker volume rm vunet
+```
+Confirming the removal of volume vunet by listing down all the volumes, and noticing that `vunet` is missing, using the command:  
+```bash
+docker volume ls
+```
 
 These have been demonstrated in the snapshot attached below:
-![alt text](image-11.png)
-### 7. Create a `Dockerfile` that : 
-a. Uses the latest `ubuntu` image  
-b. Install `python3.10`   
-c. Copy the below python script into the image.  
+![Stopping and removing a volume](image-11.png)
 
-```python
-import http.server
-import socketserver
-from http import HTTPStatus
-class Handler(http.server.SimpleHTTPRequestHandler):
-    def do_GET(self):
-        self.send_response(HTTPStatus.OK)
-        self.end_headers()
-        self.wfile.write(b'Hello world')
-httpd = socketserver.TCPServer(('', 8000), Handler)
-print("Serving Http Requests on 8000...)
-httpd.serve_forever()
+### 7. Create a `Dockerfile` that : 
+    a. Uses the latest `ubuntu` image  
+    b. Install `python3.10`   
+    c. Copy the below python script into the image.  
+
+    ```python
+    import http.server
+    import socketserver
+    from http import HTTPStatus
+    class Handler(http.server.SimpleHTTPRequestHandler):
+        def do_GET(self):
+            self.send_response(HTTPStatus.OK)
+            self.end_headers()
+            self.wfile.write(b'Hello world')
+    httpd = socketserver.TCPServer(('', 8000), Handler)
+    print("Serving Http Requests on 8000...)
+    httpd.serve_forever()
+    ```
+    d. Run the python file as the entrypoint
+
+### Solution
+
+>Note: This is similar to Assignment-1, hence the solution has been reused while answering this question. 
+
+Step 1: Copy the code into a python file and save the file as _assignment-1.py_.
+
+Step 2: Create the following dockerfile using nano editor, and name it _Dockerfile-Assignment-1_:
+
+```Dockerfile
+FROM ubuntu:latest
+
+WORKDIR /src
+
+RUN apt-get update \
+    && apt-get install -y software-properties-common \
+    && add-apt-repositor ppa:deadsnakes/ppa \
+    && apt-get update \
+    && apt-get install -y python3.10 \ 
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
+COPY assignment-1.py .
+
+EXPOSE 8000
+
+ENTRYPOINT ["python3.10", "assignment-1.py"]
 ```
- 
+The snapshot of the same is attached below:
+
+![Dockerfile in Nano Editor](image-3.png)
+
+### Breakdown
+- **FROM ubuntu:latest** --> This line ensures that the latest official ubuntu image is being used.
+- **WORKDIR /src** --> This ensures that the directory within the container is set to /src. The COPY and RUN commands will be relative to this directory.
+- **apt-get update** --> Updates the list of available pakcages and versions in the Ubuntu repository.
+- **apt-get install -y software properties-common** --> Installs tools required to add a new software repository. **-y** confirms the installation automatically instead of asking for the permission from the CLI.
+- **add-apt-repositor ppa:deadsnakes/ppa** --> This line adds a third-party Personal Package Archive that provides newer Python versions not available in default Ubuntu repositories (python3.10 in this case).
+- **apt-get install -y python3.10** --> This line finally installs python3.10 in the docker environment.
+- **apt-get clean** --> This line cleans up cached package files to reduce image size.
+- **rm -rf /var/lib/apt/lists/** --> This line removes the local apt package cache.
+- **COPY assignment-1.py .** --> This line copies the assignment-1.py file that was created in the same directory as the dockerfile, into the container's working directory defined by `WORKDIR`.
+- **EXPOSE 8000** --> This line ensures that the container will listen on port 8000. 8000 is defined because the given python code starts an HTTP server that listens to port 8000.
+- **ENTRYPOINT ["python3.10", "assignment-1.py"]** --> This line sets the entrypoint of the container to the python file that has been named `assignment-1.py`, and it runs using python version 3.10.
+
+>Note: Ubuntu does not contain python3.10 in its default repositories, hence it was necessary to installtools required to add a new software peopsitory and the third party PPA.
+
+Step 3: Create the following python file using the nano editor, name it as assignment-1.py. This file is created inside the _hello-world-python_ directory that was used during _Install Docker_ module of vulearn platform.
+
+![assignment-1.py in Nano Editor](image.png)
+
+### Output
+`Hello world` will be displayed when localhost:8000 is opened on the browser, as shown in the below snapshot.
+![Assignment-1 outputon localhost:8000](image-4.png)
+
 ### 8. Run a container using the image created
 
+Running docker using the following command:
+```bash 
+   docker run -d -p 8000:8000 sajal012/sajal_docker:assignment_1
+```
+
+This will run the image:
+- created by profile `sajal012`
+- having container name `sajal_docker`
+- having tag `assignment_1`
+- in `detached` mode
+- mapping host machine's port `8000` to port `8000` of the docker container
+
 ### 9. Check if the container is running and has the python process running
+
+### Solution
+To check the python processes that are running, the following command is used:
+```bash
+   docker top 1e43b28f3a14
+```
+Where `1e43b28f3a14` is the CONTAINER ID. This command will check for python processes running for a given container if its ID is provided. 
+
+![Python process](image_17.png)
+
+Checking whether the container is running by using the following command:
+```bash
+   docker ps
+``` 
+It will show various details like the container ID, image name and status. This is shown in the snapshot below:
+
+![Running containers](image-5.png)
 
 ### 10. 
 ### a. Why are docker networks used?
@@ -262,7 +374,7 @@ This will add 5 containers assignment_a, assignment_b, assignment_c, assignment_
 
 The same is demonstarted in the attached snapshot:
 
-![alt text](image-12.png)
+![Creation of nginx cluster](image-12.png)
 
 Using the command `docker network inspect vunet`, the cluster can be viewed. The following snapshot contains a snippet of all the information this command gives out:
-![alt text](image-13.png)
+![Cluster info](image-13.png)
